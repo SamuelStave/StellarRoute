@@ -138,8 +138,11 @@ pub fn redact_card_value(value: &mut serde_json::Value) {
     match value {
         serde_json::Value::Object(map) => {
             for (k, v) in map.iter_mut() {
-                if CARD_SENSITIVE_KEYS.contains(&k.to_lowercase().as_str()) {
-                    *v = serde_json::Value::String(CARD_REDACTED.to_string());
+                if CARD_SENSITIVE_KEYS
+                    .iter()
+                    .any(|key| key.eq_ignore_ascii_case(k))
+                {
+                    *v = serde_json::Value::String(CARD_REDACTED.to_owned());
                 } else {
                     redact_card_value(v);
                 }
