@@ -3,8 +3,10 @@
 pub mod activity;
 pub mod admin;
 pub mod admin_cache;
+pub mod agent;
 pub mod assets;
 pub mod canary;
+pub mod card;
 pub mod contract_registry;
 pub mod health;
 pub mod idempotent_quote;
@@ -155,6 +157,8 @@ pub fn create_router(state: Arc<AppState>) -> Router {
         // Health check
         .route("/health", get(health::health_check))
         .route("/health/deps", get(health::dependency_health))
+        .route("/api/v1/card/health", get(card::health::card_health))
+        .route("/api/v1/agent/chat", post(agent::routes::agent_chat))
         .merge(operator_routes)
         .merge(live_path_routes)
         // API v2 seam (chain-aware assets; quotes remain on v1)
